@@ -334,3 +334,26 @@ if __name__ == "__main__":
 
     atlas_plotter = AtlasPlotter(degree, cmap_name=conn_plotter.cmap_name)
     atlas_plotter.plot(block=True)
+
+
+def get_atlas_labels(atlas:str = "aal78"):
+    """get list of atlas labels for 78 region AAL or 52 region Glasser atlas
+
+    Args:
+        atlas (str, optional): choice of "aal78" or "glasser52". Defaults to "aal78".
+
+    Raises:
+        ValueError: if choice is not "aal78" or "glasser52".
+
+    Returns:
+        list(str): list of atlas label strings
+    """
+    atlas_labels_file = os.path.join(os.path.dirname(__file__), "atlas_labels.pkl")
+    with open(atlas_labels_file, "rb") as f:
+        atlas_labels = pickle.load(f)
+
+    if atlas.lower() == "glasser52" or atlas.lower() == "aal78":
+        labels = atlas_labels[atlas.lower()]["labels"]
+    else:
+        raise ValueError("Only aal78 and glasser52 are supported")
+    return labels

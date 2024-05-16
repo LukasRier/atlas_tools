@@ -92,7 +92,9 @@ class AtlasPlotter:
 
         c_map = plt.get_cmap(self.cmap_name)(np.linspace(0, 1, 256))[:, 0:3]
 
-        atlas_surf_info = loadmat(os.path.join(os.path.dirname(__file__), "surf_info_aal_glasser.mat"))
+        atlas_surf_info = loadmat(
+            os.path.join(os.path.dirname(__file__), "surf_info_aal_glasser.mat")
+        )
 
         vertices_L = atlas_surf_info["surf_lh"][0][0][1]
         faces_L = atlas_surf_info["surf_lh"][0][0][2] - 1

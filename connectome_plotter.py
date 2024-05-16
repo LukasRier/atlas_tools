@@ -22,6 +22,7 @@ from scipy.io import loadmat
 from mne_connectivity.viz import plot_connectivity_circle
 from mne.viz import circular_layout
 
+
 class ConnectomePlotter:
     """Connectome plotter class
 
@@ -59,7 +60,7 @@ class ConnectomePlotter:
 
         if self.connectivity_matrix.shape[0] != self.connectivity_matrix.shape[1]:
             raise ValueError("Connectivity matrix should be 2D square matrix")
-        
+
         atlas_labels_file = os.path.join(os.path.dirname(__file__), "atlas_labels.pkl")
         with open(atlas_labels_file, "rb") as f:
             atlas_labels = pickle.load(f)
@@ -282,7 +283,37 @@ def _multiline(xs, ys, zs, c, ax=None, **kwargs):
     return lc
 
 
+def get_atlas_labels(atlas: str = "aal78"):
+    """get list of atlas labels for 78 region AAL or 52 region Glasser atlas
+
+    Args:
+        atlas (str, optional): choice of "aal78" or "glasser52". Defaults to "aal78".
+
+    Raises:
+        ValueError: if choice is not "aal78" or "glasser52".
+
+    Returns:
+        dict: keys: atlas label strings, values: atlas number integers
+    """
+    atlas_labels_file = os.path.join(os.path.dirname(__file__), "atlas_labels.pkl")
+    with open(atlas_labels_file, "rb") as f:
+        atlas_labels = pickle.load(f)
+
+    if atlas.lower() == "glasser52" or atlas.lower() == "aal78":
+        names = atlas_labels[atlas.lower()]["labels"]
+    else:
+        raise ValueError("Only aal78 and glasser52 are supported")
+
+    labels = {n: i + 1 for i, n in enumerate(names)}
+    return labels
+
+
 if __name__ == "__main__":
+    # test get_atlas_labels
+
+    aal_labels = get_atlas_labels(atlas="aal78")
+    glasser_labels = get_atlas_labels(atlas="glasser52")
+    # test plotting
     import itertools
     import pandas as pd
 
@@ -334,26 +365,3 @@ if __name__ == "__main__":
 
     atlas_plotter = AtlasPlotter(degree, cmap_name=conn_plotter.cmap_name)
     atlas_plotter.plot(block=True)
-
-
-def get_atlas_labels(atlas:str = "aal78"):
-    """get list of atlas labels for 78 region AAL or 52 region Glasser atlas
-
-    Args:
-        atlas (str, optional): choice of "aal78" or "glasser52". Defaults to "aal78".
-
-    Raises:
-        ValueError: if choice is not "aal78" or "glasser52".
-
-    Returns:
-        list(str): list of atlas label strings
-    """
-    atlas_labels_file = os.path.join(os.path.dirname(__file__), "atlas_labels.pkl")
-    with open(atlas_labels_file, "rb") as f:
-        atlas_labels = pickle.load(f)
-
-    if atlas.lower() == "glasser52" or atlas.lower() == "aal78":
-        labels = atlas_labels[atlas.lower()]["labels"]
-    else:
-        raise ValueError("Only aal78 and glasser52 are supported")
-    return labels

@@ -5,18 +5,22 @@ Created on Fri May 10 14:44:12 2024
 
 @author: ppzlr
 """
+import os
+import pickle
+
 import numpy as np
 import matplotlib
-from mne_connectivity.viz import plot_connectivity_circle
-from mne.viz import circular_layout
+
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Line3DCollection
 from matplotlib.colors import Normalize
 from mpl_toolkits.mplot3d import art3d
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-from scipy.io import loadmat
-import pickle
 
+from scipy.io import loadmat
+
+from mne_connectivity.viz import plot_connectivity_circle
+from mne.viz import circular_layout
 
 class ConnectomePlotter:
     """Connectome plotter class
@@ -55,8 +59,9 @@ class ConnectomePlotter:
 
         if self.connectivity_matrix.shape[0] != self.connectivity_matrix.shape[1]:
             raise ValueError("Connectivity matrix should be 2D square matrix")
-
-        with open("atlas_labels.pkl", "rb") as f:
+        
+        atlas_labels_file = os.path.join(os.path.dirname(__file__), "atlas_labels.pkl")
+        with open(atlas_labels_file, "rb") as f:
             atlas_labels = pickle.load(f)
 
         if atlas is None and self.connectivity_matrix.shape[0] == 52:
@@ -149,7 +154,7 @@ class ConnectomePlotter:
         line_scale: int = 5,
         block=False,
     ):
-        mat = loadmat("atlas_viewer.mat")
+        mat = loadmat(os.path.join(os.path.dirname(__file__), "atlas_viewer.mat"))
         faces = mat["aalviewer"][0][0][1] - 1
         vertices = mat["aalviewer"][0][0][2]
 

@@ -41,7 +41,8 @@ class AtlasPlotter:
             cmap_name (str, optional): Matplotlib colormap name. Defaults to "turbo".
             cbar_title (str, optional):  Title for color bar. Gets set to determined atlas name if None. Defaults to None.
         """
-        if colour_range is None:
+        self.colour_range = colour_range
+        if self.colour_range is None:
             self.colour_range = [np.nanmin(region_stats), np.nanmax(region_stats)]
             if self.colour_range[0] == self.colour_range[1]:
                 self.colour_range[0] = 0

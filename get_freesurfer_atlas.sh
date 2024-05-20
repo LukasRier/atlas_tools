@@ -36,7 +36,8 @@ else
     echo "Assuming AAL78 atlas"
 fi
 
-ANAT="${FS_DIRECTORY}/sub-${sub}/mri/T1"
+#ANAT="${FS_DIRECTORY}/sub-${sub}/mri/T1"
+ANAT="${FS_DIRECTORY}/sub-${sub}/mri/brain"
 
 mri_convert $ANAT.mgz $ANAT.nii.gz
 
@@ -44,7 +45,8 @@ mri_convert $ANAT.mgz $ANAT.nii.gz
 MNI2ANAT="${FS_DIRECTORY}/sub-${sub}/mri/mni2anat"
 
 
-MNI_brain="${FS_DIRECTORY}/MNI152_T1_1mm_FS.nii.gz"
+#MNI_brain="${FS_DIRECTORY}/MNI152_T1_1mm_FS.nii.gz"
+MNI_brain="${FS_DIRECTORY}/MNI152_T1_1mm_brain_FS.nii.gz"
 
 # Check files exist
 if ! [[ -f "$ANAT.nii" || -f "$ANAT.nii.gz" ]]; then

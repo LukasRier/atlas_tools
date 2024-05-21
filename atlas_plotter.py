@@ -229,7 +229,7 @@ class AtlasPlotter:
                                                         "side_left", "head_on", "bottom_up",
                                                         "inside_left", "inside_right"]
         """
-
+        mlab.options.offscreen = False # ensure plots show up if previous instance set True
         if explore_mode:
             self.plot_both()
 
@@ -300,7 +300,7 @@ class AtlasPlotter:
         mlab.close()
 
         # plots only left hemisphere to get inside view
-        mlab.figure(bgcolor=(1, 1, 1), size=(400, 600))
+        mlab.figure(bgcolor=(1, 1, 1), size=figsize)
         msh_L = mlab.triangular_mesh(
             self.vertices["L"][:, 0],
             self.vertices["L"][:, 1],
@@ -372,7 +372,7 @@ class AtlasPlotter:
         print("Close figure to continue...")
         plt.draw_all()
         plt.show(block=block)
-
+        
         return images
 
 

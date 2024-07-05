@@ -365,3 +365,25 @@ if __name__ == "__main__":
 
     atlas_plotter = AtlasPlotter(degree, cmap_name=conn_plotter.cmap_name)
     atlas_plotter.plot(block=True)
+
+    mean_ad = loadmat("mean_ad.mat")
+    cm = mean_ad['mean_ad']
+    top_n = 100
+    conn_plotter = ConnectomePlotter(cm)
+    conn_plotter.plot_glassbrain(top_n=top_n)
+    conn_plotter.plot_matrix()
+    conn_plotter.plot_circle(top_n=top_n)
+
+    degree = np.nansum(np.abs(cm), axis=1)
+    from atlas_plotter import AtlasPlotter
+
+    atlas_plotter = AtlasPlotter(degree, cmap_name=conn_plotter.cmap_name,colour_range=[0,10])
+    atlas_plotter.plot(block=True)
+
+    degree = np.random.permutation(78)
+    atlas_plotter = AtlasPlotter(degree, cmap_name="turbo",colour_range=[0,78])
+    atlas_plotter.plot(block=True)
+
+    degree = np.random.permutation(52)
+    atlas_plotter = AtlasPlotter(degree, cmap_name="turbo",colour_range=[0,52])
+    atlas_plotter.plot(block=True)

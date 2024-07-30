@@ -33,7 +33,7 @@ class ConnectomePlotter:
     def __init__(
         self,
         connectivity_matrix: np.ndarray,
-        colour_range=None,
+        colour_range = None,
         atlas: str = None,
         cmap_name: str = "RdBu_r",
         cbar_title: str = "Connectivity",
@@ -54,7 +54,7 @@ class ConnectomePlotter:
             vlim = np.nanmax(np.abs(self.connectivity_matrix))
             self.colour_range = [-vlim, vlim]
         elif len(colour_range) == 1:
-            self.colour_range = [-colour_range, colour_range]
+            self.colour_range = [-colour_range[0], colour_range[0]]
         elif len(colour_range) > 2:
             raise ValueError("colour_range must be list of length 1 or 2")
 

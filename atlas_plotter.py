@@ -229,7 +229,9 @@ class AtlasPlotter:
                                                         "side_left", "head_on", "bottom_up",
                                                         "inside_left", "inside_right"]
         """
-        mlab.options.offscreen = False # ensure plots show up if previous instance set True
+        mlab.options.offscreen = (
+            False  # ensure plots show up if previous instance set True
+        )
         if explore_mode:
             self.plot_both()
 
@@ -372,7 +374,7 @@ class AtlasPlotter:
         print("Close figure to continue...")
         plt.draw_all()
         plt.show(block=block)
-        
+
         return images
 
 

@@ -217,7 +217,10 @@ class ConnectomePlotter:
 
         node_sizes = np.interp(
             node_degree[include_vert],
-            (np.nanmin(node_degree[include_vert]), np.nanmax(node_degree[include_vert])),
+            (
+                np.nanmin(node_degree[include_vert]),
+                np.nanmax(node_degree[include_vert]),
+            ),
             (2, 50),
         )
         ax.scatter(

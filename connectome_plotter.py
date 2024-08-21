@@ -186,8 +186,11 @@ class ConnectomePlotter:
 
         lws = line_scale * (conn_val / (np.nanmax(np.abs(conn_val)))) ** 2
         conn_val_partitioned = np.partition(np.abs(conn_val), -top_n)
-
-        include = np.abs(conn_val) >= conn_val_partitioned[-(top_n)]
+        thresh = conn_val_partitioned[-(top_n)]
+        if not np.isnan(thresh):
+            include = np.abs(conn_val) >= thresh
+        else:
+            include = np.abs(conn_val) >= np.nanmin(np.abs(conn_val))
         # include = conn_val >= np.percentile(conn_val, 95)
 
         lc = _multiline(

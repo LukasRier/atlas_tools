@@ -33,7 +33,7 @@ class ConnectomePlotter:
     def __init__(
         self,
         connectivity_matrix: np.ndarray,
-        colour_range = None,
+        colour_range=None,
         atlas: str = None,
         cmap_name: str = "RdBu_r",
         cbar_title: str = "Connectivity",
@@ -373,7 +373,7 @@ if __name__ == "__main__":
     atlas_plotter.plot(block=True)
 
     mean_ad = loadmat("mean_ad.mat")
-    cm = mean_ad['mean_ad']
+    cm = mean_ad["mean_ad"]
     top_n = 100
     conn_plotter = ConnectomePlotter(cm)
     conn_plotter.plot_glassbrain(top_n=top_n)
@@ -383,13 +383,15 @@ if __name__ == "__main__":
     degree = np.nansum(np.abs(cm), axis=1)
     from atlas_plotter import AtlasPlotter
 
-    atlas_plotter = AtlasPlotter(degree, cmap_name=conn_plotter.cmap_name,colour_range=[0,10])
+    atlas_plotter = AtlasPlotter(
+        degree, cmap_name=conn_plotter.cmap_name, colour_range=[0, 10]
+    )
     atlas_plotter.plot(block=True)
 
     degree = np.random.permutation(78)
-    atlas_plotter = AtlasPlotter(degree, cmap_name="turbo",colour_range=[0,78])
+    atlas_plotter = AtlasPlotter(degree, cmap_name="turbo", colour_range=[0, 78])
     atlas_plotter.plot(block=True)
 
     degree = np.random.permutation(52)
-    atlas_plotter = AtlasPlotter(degree, cmap_name="turbo",colour_range=[0,52])
+    atlas_plotter = AtlasPlotter(degree, cmap_name="turbo", colour_range=[0, 52])
     atlas_plotter.plot(block=True)

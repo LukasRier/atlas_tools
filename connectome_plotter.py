@@ -38,6 +38,19 @@ class ConnectomePlotter:
         cmap_name: str = "RdBu_r",
         cbar_title: str = "Connectivity",
     ):
+        """Initialize the connectome plotter.
+
+        Args:
+            connectivity_matrix (np.ndarray): square matrix of connectivity values
+            colour_range (int | list[int,int], optional): colour limits. Will be set to +- a given single float or -+ the maximum absolute value in connectivity_matrix if None.
+            atlas (str, optional): Atlas name (aal78 or glasser52). Defaults to None and detects based on matrix size (78 =>AAL, 52 => glasser).
+            cmap_name (str, optional): numpy colormaps name. Defaults to "RdBu_r".
+            cbar_title (str, optional): Title/label for colorbar. Defaults to "Connectivity".
+
+        Raises:
+            ValueError: If colour_range is not of len 1 or 2
+            ValueError: If matrix is not a 2D square matrix
+        """
         self.connectivity_matrix = connectivity_matrix
         np.fill_diagonal(self.connectivity_matrix, np.nan)
 
@@ -78,6 +91,16 @@ class ConnectomePlotter:
         self.node_order = atlas_labels[self.atlas]["order"]
 
     def plot_matrix(self, figsize=(9, 8), title: str = "", block=False):
+        """Plot adjacency matrix with labels.
+
+        Args:
+            figsize (tuple, optional): Figure size in inches. Defaults to (9, 8).
+            title (str, optional): Figure title. Defaults to "".
+            block (bool, optional): Block further execution when running matplotlib.pyplot.show. Defaults to False.
+
+        Returns:
+            matplotlib.pyplot.figure: Figure object with matrix plot
+        """
         fig, ax = plt.subplots(
             squeeze=False,
             figsize=figsize,
@@ -121,6 +144,16 @@ class ConnectomePlotter:
         return fig
 
     def plot_circle(self, top_n: int = 150, title: str = None, block=False):
+        """Wrapper for mne_connectivity.viz.plot_connectivity_circle
+
+        Args:
+            top_n (int, optional): Number of strongest connections to plot. Defaults to 150.
+            title (str, optional): Colorbar title. Defaults to None.
+            block (bool, optional): Block further execution when running matplotlib.pyplot.show. Defaults to False.
+
+        Returns:
+            matplotlib.pyplot.figure: Figure object with circle plot
+        """
         fig, ax = plt.subplots(
             figsize=(8, 8), facecolor="black", subplot_kw=dict(polar=True)
         )
@@ -155,6 +188,19 @@ class ConnectomePlotter:
         line_scale: int = 5,
         block=False,
     ):
+        """Plot connectome as nodes and edges inside transparent brain volume.
+        Node sizes are scaled by number of connections and edge thickness is determined by connectivity strength.
+
+        Args:
+            top_n (int, optional): Number of strongest connections to plot. Defaults to 150.
+            view (str, optional): Set direction of view for 3D plot. Defaults to "top_down".
+            title (str, optional): Colorbar title. Defaults to "".
+            line_scale (int, optional): Scale value governing edge thicknesses. Defaults to 5.
+            block (bool, optional): Block further execution when running matplotlib.pyplot.show. Defaults to False.
+
+        Returns:
+            matplotlib.pyplot.figure: Figure object with glass brain plot
+        """
         mat = loadmat(os.path.join(os.path.dirname(__file__), "atlas_viewer.mat"))
         faces = mat["aalviewer"][0][0][1] - 1
         vertices = mat["aalviewer"][0][0][2]

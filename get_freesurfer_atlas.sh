@@ -45,7 +45,6 @@ mri_convert $ANAT.mgz $ANAT.nii.gz
 MNI2ANAT="${FS_DIRECTORY}/sub-${sub}/mri/mni2anat"
 
 
-#MNI_brain="${FS_DIRECTORY}/MNI152_T1_1mm_FS.nii.gz"
 MNI_brain="${FS_DIRECTORY}/MNI152_T1_1mm_brain_FS.nii.gz"
 
 # Check files exist

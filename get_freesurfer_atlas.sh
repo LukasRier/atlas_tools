@@ -1,12 +1,12 @@
 #!/bin/bash
 
-if [[ ( $@ == "--help") ||  $@ == "-h" || $# == 0 ]]
+if [[ ( $@ == "--help") ||  $@ == "-h" ]]
 then 
 		echo " "
 		echo "Usage: $0 <FS_DIRECTORY> <subjectNumber> ['aal78'(default)|'glasser52']"
 		echo " "
-		echo "FS_DIRECTORY...BIDS directory containing /derivatives/FS_SUBJECTS"
-		echo "subjectNumber......For example 001,002 etc."
+		echo "FS_DIRECTORY...directory containing freesurfer outputs for <subjectNumber>"
+		echo "subjectNumber......For example sub-001, sub-002 etc."
 		echo " "
 		echo "Needs: Freesurfer, fsl,"
 		echo "       <FS_DIRECTORY>/AAL_all_reg_1mm_FS.nii.gz (AAL region atlas - single 3D volume with region numbers in region voxels)"
@@ -16,17 +16,39 @@ then
 		exit 0
 fi 
 export FSLOUTPUTTYPE=NIFTI_GZ
-FS_DIRECTORY=$1 
-sub=$2
+if [[ ( $# >= 2 ) ]]
+then
+	FS_DIRECTORY=$1
+	sub=$2
+	atlas_choice=$3
+else
+	FS_DIRECTORY="$(zenity --file-selection \
+                --title "Select Freesurfer Directory" \
+				--directory \
+                --filename="~")"
 
-ATLAS_REGS_sub="${FS_DIRECTORY}/sub-${sub}/mri/AAL_regions"
+	subs="$(ls "$FS_DIRECTORY")"
+
+	pipe_separated=$(printf "%s|" $subs)
+	# Remove the trailing |
+	pipe_separated=${pipe_separated%|}
+	# echo $pipe_separated
+	sub="$(zenity --forms --add-combo="Subject" --combo-values="$pipe_separated" \
+				--title "Select Subject for Atlas alignment")"
+	
+	atlas_choice="$(zenity --forms --add-combo="Atlas" \
+				--combo-values="aal78|glasser52" \
+				--title "Select Atlas")"
+fi
+
+ATLAS_REGS_sub="${FS_DIRECTORY}/${sub}/mri/AAL_regions"
 ATLAS_REGS="${FS_DIRECTORY}/AAL_all_reg_1mm_FS.nii.gz"
 
-if [ $# -ge 3 ]; then
-    if [ "$3" = "aal78" ]; then
+if [ ! -z $atlas_choice ]; then
+    if [ "atlas_choice" = "aal78" ]; then
         echo "using AAL78 atlas"
-    elif [ "$3" = "glasser52" ]; then
-		ATLAS_REGS_sub="${FS_DIRECTORY}/sub-${sub}/mri/Glasser52_regions"
+    elif [ "atlas_choice" = "glasser52" ]; then
+		ATLAS_REGS_sub="${FS_DIRECTORY}/${sub}/mri/Glasser52_regions"
 		ATLAS_REGS="${FS_DIRECTORY}/Glasser52_all_reg_1mm_FS.nii.gz"
     else
         echo "Third argument is neither 'glasser52' nor 'aal78'."
@@ -36,14 +58,11 @@ else
     echo "Assuming AAL78 atlas"
 fi
 
-#ANAT="${FS_DIRECTORY}/sub-${sub}/mri/T1"
-ANAT="${FS_DIRECTORY}/sub-${sub}/mri/brain"
+ANAT="${FS_DIRECTORY}/${sub}/mri/brain"
 
 mri_convert $ANAT.mgz $ANAT.nii.gz
 
-
-MNI2ANAT="${FS_DIRECTORY}/sub-${sub}/mri/mni2anat"
-
+MNI2ANAT="${FS_DIRECTORY}/${sub}/mri/mni2anat"
 
 MNI_brain="${FS_DIRECTORY}/MNI152_T1_1mm_brain_FS.nii.gz"
 
@@ -61,9 +80,7 @@ if ! [ -f "$MNI_brain" ]; then
    echo "$MNI_brain doesn't exist!"
    exit 1
 fi
-# ensure no nans in volume
-#fslmaths $ANAT -nan $ANAT
-#rm $ANAT.nii
+
 # flirt anatomical to MNI saving ANAT2MNI transform
 echo "flirt ANAT -> MNI brain"
 flirt -in ${MNI_brain} -ref ${ANAT}.nii.gz -out ${MNI2ANAT} -omat ${MNI2ANAT}.mat \
@@ -74,5 +91,3 @@ echo "warping AAL regions to subject space"
 flirt -in ${ATLAS_REGS} -applyxfm -init ${MNI2ANAT}.mat -out ${ATLAS_REGS_sub} -paddingsize 0.0 -interp nearestneighbour -ref ${ANAT}
 
 mri_convert ${ATLAS_REGS_sub}.nii.gz ${ATLAS_REGS_sub}.mgz
-
-# cp $FS_DIRECTORY/AAL.ctab $FS_DIRECTORY/sub-${sub}/label/AAL.ctab #not really necessary

@@ -16,7 +16,7 @@ then
 		exit 0
 fi 
 export FSLOUTPUTTYPE=NIFTI_GZ
-if [[ ( $# >= 2 ) ]]
+if [[ (( $# >= 2 )) ]]
 then
 	FS_DIRECTORY=$1
 	sub=$2

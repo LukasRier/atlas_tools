@@ -1,5 +1,5 @@
 #!/bin/bash
-
+source load_FS
 if [[ ( $@ == "--help") ||  $@ == "-h" ]]
 then 
 		echo " "
@@ -40,14 +40,15 @@ else
 				--combo-values="aal78|glasser52" \
 				--title "Select Atlas")"
 fi
-
+echo this is my atlas choice $atlas_choice
 ATLAS_REGS_sub="${FS_DIRECTORY}/${sub}/mri/AAL_regions"
 ATLAS_REGS="${FS_DIRECTORY}/AAL_all_reg_1mm_FS.nii.gz"
 
 if [ ! -z $atlas_choice ]; then
-    if [ "atlas_choice" = "aal78" ]; then
+    if [ "$atlas_choice" = "aal78" ]; then
         echo "using AAL78 atlas"
-    elif [ "atlas_choice" = "glasser52" ]; then
+    elif [ "$atlas_choice" = "glasser52" ]; then
+		echo "using Glasser52 atlas"
 		ATLAS_REGS_sub="${FS_DIRECTORY}/${sub}/mri/Glasser52_regions"
 		ATLAS_REGS="${FS_DIRECTORY}/Glasser52_all_reg_1mm_FS.nii.gz"
     else

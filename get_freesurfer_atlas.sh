@@ -13,7 +13,7 @@ then
 		echo "			or "
 		echo "       <FS_DIRECTORY>/Glasser52_all_reg_1mm_FS.nii.gz (Glasser 52 region atlas - single 3D volume with region numbers in region voxels)"
 		echo "       <FS_DIRECTORY>/MNI152_T1_1mm_FS.nii.gz (MNI template)"
-		echo " v2.0.0 | Lukas Rier 2025
+		echo " v2.0.0 | Lukas Rier 2025 "
 		exit 0
 fi 
 export FSLOUTPUTTYPE=NIFTI_GZ

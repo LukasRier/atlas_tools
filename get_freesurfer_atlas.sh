@@ -21,7 +21,7 @@ if [[ $# -ge "2" ]]
 then
 	FS_DIRECTORY=$1
 	sub=$2
-	atlas_choice=$3
+	atlas_choices=$3
 else
 	FS_DIRECTORY="$(zenity --file-selection \
                 --title "Select Freesurfer Directory" \

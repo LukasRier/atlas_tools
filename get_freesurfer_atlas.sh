@@ -4,7 +4,7 @@ if [[ ( $@ == "--help") ||  $@ == "-h" ]]
 then 
 		echo " "
 		echo "Usage: $0 <FS_DIRECTORY> <subjectNumber> ['aal78'(default)|'glasser52']"
-		echo " "
+		echo " for running multiple atlases make the third argument \"aal78|glasser52\""
 		echo "FS_DIRECTORY...directory containing freesurfer outputs for <subjectNumber>"
 		echo "subjectNumber......For example sub-001, sub-002 etc."
 		echo " "
